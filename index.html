@@ -3,34 +3,59 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Quick Word Counter</title>
+  <title>Word Counter Pro</title>
   <style>
     body { font-family: system-ui, -apple-system, sans-serif; background: #0f172a; color: #f8fafc; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
-    .card { background: #1e293b; padding: 2rem; border-radius: 12px; width: 90%; max-width: 500px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
+    .card { background: #1e293b; padding: 2rem; border-radius: 12px; width: 90%; max-width: 520px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
+    .header-row { display: flex; justify-content: space-between; align-items: center; }
+    h2 { margin: 0; font-size: 1.4rem; }
+    button.clear-btn { background: #ef4444; color: #fff; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-weight: 600; }
+    button.clear-btn:hover { background: #dc2626; }
     textarea { width: 100%; height: 140px; box-sizing: border-box; background: #0f172a; border: 1px solid #334155; border-radius: 8px; color: #fff; padding: 12px; font-size: 1rem; resize: none; outline: none; margin-top: 1rem; }
-    .stats { display: flex; gap: 1rem; margin-top: 1rem; }
+    .stats { display: flex; gap: 0.75rem; margin-top: 1rem; }
     .stat-box { flex: 1; background: #334155; padding: 0.75rem; border-radius: 8px; text-align: center; }
-    .stat-box span { display: block; font-size: 1.5rem; font-weight: bold; color: #38bdf8; }
+    .stat-box span { display: block; font-size: 1.4rem; font-weight: bold; color: #38bdf8; }
+    .stat-box label { font-size: 0.75rem; text-transform: uppercase; color: #94a3b8; letter-spacing: 0.05em; }
   </style>
 </head>
 <body>
   <div class="card">
-    <h2>⚡ Word Counter Pro</h2>
+    <div class="header-row">
+      <h2>🔥 Word Counter Pro</h2>
+      <button id="clear-btn" class="clear-btn">Clear</button>
+    </div>
     <textarea id="text-input" placeholder="Type or paste text here..."></textarea>
     <div class="stats">
-      <div class="stat-box"><span id="word-count">0</span>Words</div>
-      <div class="stat-box"><span id="char-count">0</span>Characters</div>
+      <div class="stat-box"><span id="word-count">0</span><label>Words</label></div>
+      <div class="stat-box"><span id="char-count">0</span><label>Characters</label></div>
+      <div class="stat-box"><span id="read-time">0m</span><label>Reading Time</label></div>
     </div>
   </div>
   <script>
     const input = document.getElementById('text-input');
     const words = document.getElementById('word-count');
     const chars = document.getElementById('char-count');
+    const readTime = document.getElementById('read-time');
+    const clearBtn = document.getElementById('clear-btn');
 
-    input.addEventListener('input', () => {
-      const val = input.value.trim();
+    function updateCounts() {
+      const text = input.value.trim();
       chars.textContent = input.value.length;
-      words.textContent = val ? val.split(/\s+/).length : 0;
+      
+      const wordTotal = text ? text.split(/\s+/).length : 0;
+      words.textContent = wordTotal;
+
+      // 200 words per minute average reading speed
+      const minutes = Math.ceil(wordTotal / 200);
+      readTime.textContent = wordTotal === 0 ? '0m' : `${minutes}m`;
+    }
+
+    input.addEventListener('input', updateCounts);
+
+    clearBtn.addEventListener('click', () => {
+      input.value = '';
+      updateCounts();
+      input.focus();
     });
   </script>
 </body>
